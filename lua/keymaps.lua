@@ -25,8 +25,8 @@ return {
       { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
       { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
       -- find
-      { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+      { "<leader>bb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>br", function() Snacks.picker.recent() end, desc = "Recent" },
       -- Grep
       { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
       {
