@@ -1,7 +1,6 @@
 return {
   -- editor
   { "nvim-mini/mini.ai", version = false, opts = {} },
-  { "nvim-mini/mini.comment", version = false, opts = {} },
   { "nvim-mini/mini.pairs", version = false, opts = {} },
   { "nvim-mini/mini.surround", version = false, opts = {} },
 
@@ -62,6 +61,9 @@ return {
 
         -- Git
         { mode = "n", keys = "<Leader>g", desc = "Git" },
+
+        -- LSP
+        { mode = "n", keys = "<Leader>l", desc = "LSP" },
       }
     end,
   },
@@ -73,7 +75,4 @@ return {
       autowrite = true,
     },
   },
-
-  -- git
-  -- { "nvim-mini/mini-git", version = false, opts = {} },
 }
