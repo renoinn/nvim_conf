@@ -1,65 +1,78 @@
 -- Customize Treesitter
 
----@type LazySpec
 return {
-  "nvim-treesitter/nvim-treesitter",
-  version = false,
-  lazy = vim.fn.argc(-1) == 0, -- load treesitter immediately when opening a file from the cmdline
-  dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", lazy = true } },
-  cmd = {
-    "TSInstall",
-    "TSInstallFromGrammer",
-    "TSUpdate",
-    "TSUninstall",
-    "TSLog",
-  },
-  build = ":TSUpdate",
-  opts_extend = { "ensure_installed" },
-  opts = {
-    ensure_installed = {
-      "go",
-      "lua",
-      "javascript",
-      "scss",
-      "typescript",
-      "vim",
-      "vue",
+  ---@type LazySpec
+  {
+    "nvim-treesitter/nvim-treesitter",
+    version = false,
+    branch = "main",
+    lazy = false,
+    cmd = {
+      "TSInstall",
+      "TSInstallFromGrammer",
+      "TSUpdate",
+      "TSUninstall",
+      "TSLog",
     },
-  },
-  config = function(_, opts)
-    local TS = require "nvim-treesitter"
-    local ensure_installed = {
-      "go",
-      "lua",
-      "javascript",
-      "scss",
-      "typescript",
-      "vim",
-      "vue",
-    }
-    local installed = {}
-    for _, lang in ipairs(TS.get_installed "parsers") do
-      installed[lang] = true
-    end
-    local to_install = vim.tbl_filter(function(what)
-      local lang = vim.treesitter.language.get_lang(what)
-      if lang == nil or installed[lang] == nil then return true end
-      return false
-    end, ensure_installed)
-    if #to_install > 0 then TS.install(to_install) end
-
-    -- Enable tree-sitter after opening a file for a target language
-    local filetypes = {}
-    for _, lang in ipairs(ensure_installed) do
-      for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
-        table.insert(filetypes, ft)
+    build = ":TSUpdate",
+    opts_extend = { "ensure_installed" },
+    ---@class OTSConfig: TSConfig
+    opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
+      folds = { enable = false },
+      ensure_installed = {
+        "go",
+        "lua",
+        "javascript",
+        "scss",
+        "typescript",
+        "vim",
+        "vue",
+      },
+    },
+    ---@param opts OTSConfig
+    config = function(_, opts)
+      local TS = require "nvim-treesitter"
+      local installed = {}
+      for _, lang in ipairs(TS.get_installed "parsers") do
+        installed[lang] = true
       end
-    end
-    local ts_start = function(ev) vim.treesitter.start(ev.buf) end
-    vim.api.nvim_create_autocmd({ "FileType" }, {
-      pattern = filetypes,
-      callback = ts_start,
-      group = vim.api.nvim_create_augroup("treesitter", {}),
-    })
-  end,
+      local to_install = vim.tbl_filter(function(what)
+        local lang = vim.treesitter.language.get_lang(what)
+        if lang == nil or installed[lang] == nil then return true end
+        return false
+      end, opts.ensure_installed)
+      if #to_install > 0 then TS.install(to_install) end
+
+      -- Enable tree-sitter after opening a file for a target language
+      local filetypes = {}
+      for _, lang in ipairs(opts.ensure_installed) do
+        for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
+          table.insert(filetypes, ft)
+        end
+      end
+      local ts_start = function(ev)
+        if opts.highlight.enable then vim.treesitter.start() end
+        if opts.indent.enable then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+        if opts.folds.enable then
+          vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+          vim.wo[0][0].foldmethod = "expr"
+        end
+      end
+      vim.api.nvim_create_autocmd({ "FileType" }, {
+        pattern = filetypes,
+        callback = ts_start,
+        group = vim.api.nvim_create_augroup("treesitter", {}),
+      })
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
+    commit = "a0e182ae21fda68c59d1f36c9ed45600aef50311",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    init = function() vim.g.no_plugin_maps = true end,
+    opts = {},
+  },
 }
