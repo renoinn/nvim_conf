@@ -64,12 +64,6 @@ return {
 
         -- Search with Snacks.picker
         { mode = "n", keys = "<Leader>s", desc = "Search" },
-
-        -- visual mode textobjects
-        -- { mode = { "v", "x", "o" }, keys = "ak", desc = "around block" },
-        -- { mode = { "v", "x", "o" }, keys = "ik", desc = "inside block" },
-        -- { mode = { "v", "x", "o" }, keys = "af", desc = "around function" },
-        -- { mode = { "v", "x", "o" }, keys = "if", desc = "inside function" },
       }
     end,
   },
