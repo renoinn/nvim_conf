@@ -1,8 +1,10 @@
 local M = {}
 
 ---@param cmd table
+---@param cwd string?
 ---@return table: out, err
-local function run_cmd(cmd)
+local function run_cmd(cmd, cwd)
+  if cwd then vim.cmd("cd" .. cwd) end
   local result = vim.system(cmd, { text = true }):wait()
   local out = vim.fn.split(result.stdout, "\n")
   local err = vim.fn.split(result.stderr, "\n")
@@ -27,7 +29,7 @@ local function find_resource(text)
     "--no-heading",
   }
   if #matches.out == 0 then
-    Snacks.notify("No result in grep", "warn")
+    Snacks.notify.warn "No result in grep"
     return {}
   end
 
@@ -44,10 +46,19 @@ function M.terraform_state()
 
   ---@type snacks.picker.finder.Item[]
   local items = {}
-  local state = run_cmd { "terraform", "state", "list" }
+
+  local cwd = vim.fn.expand "%:h"
+  local state = run_cmd({ "terraform", "state", "list" }, cwd)
+
+  if #state.err ~= 0 then
+    for _, error in ipairs(state.err) do
+      Snacks.notify.error(error)
+    end
+    return
+  end
 
   if #state.out == 0 then
-    Snacks.notify("No resources found in terraform state", "warn")
+    Snacks.notify.warn "No resources found in terraform state"
     return
   end
 
@@ -59,7 +70,6 @@ function M.terraform_state()
     })
   end
 
-  local cwd = vim.fn.expand "%:h"
   ---@type snacks.picker.Config
   picker.pick {
     source = "terraform",
