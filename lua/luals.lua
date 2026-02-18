@@ -24,16 +24,16 @@ vim.lsp.config("lua_ls", {
       },
       workspace = {
         checkThirdParty = false,
-        -- library = {
-        --   vim.env.VIMRUNTIME,
-        --   -- Depending on the usage, you might want to add additional paths
-        --   -- here.
-        --   "${3rd}/luv/library",
-        --   "${3rd}/busted/library",
-        --   "${3rd}/luassert/library",
-        --   vim.fn.expand "~/.luarocks/share/lua/5.3",
-        --   "/usr/share/lua/5.3",
-        -- },
+        library = {
+          -- vim.env.VIMRUNTIME,
+          -- Depending on the usage, you might want to add additional paths
+          -- here.
+          -- "${3rd}/luv/library",
+          -- "${3rd}/busted/library",
+          -- "${3rd}/luassert/library",
+          -- vim.fn.expand "~/.luarocks/share/lua/5.3",
+          -- "/usr/share/lua/5.3",
+        },
         -- See https://github.com/neovim/nvim-lspconfig/issues/3189
         library = vim.api.nvim_get_runtime_file("", true),
       },
