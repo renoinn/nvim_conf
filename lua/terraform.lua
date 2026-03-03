@@ -61,8 +61,11 @@ function M.terraform_state()
 
   if #state.err ~= 0 then
     Snacks.notify.error "Failed terraform state list"
-    local init = run_cmd({ "terraform", "init" }, cwd)
-    if #init.err ~= 0 then Snacks.notify.error "Failed terraform init" end
+    local run_init = vim.fn.confirm("Do you run init?", "&Yes&No", 1, "Question")
+    if run_init == 1 then
+      local init = run_cmd({ "terraform", "init" }, cwd)
+      if #init.err ~= 0 then Snacks.notify.error "Failed terraform init" end
+    end
     return
   end
 

@@ -29,6 +29,7 @@ return {
         "typescript",
         "vim",
         "vue",
+        "terraform",
       },
     },
     ---@param opts OTSConfig: TSConfig

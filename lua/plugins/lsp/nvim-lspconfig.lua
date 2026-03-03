@@ -15,6 +15,7 @@ return {
       ts_ls = {},
       gopls = {},
       lua_ls = {},
+      ["vue-language-server"] = {},
       ["copilot-language-server"] = {},
       ["terraform-ls"] = {},
     },
