@@ -14,7 +14,7 @@ nmap("<C-k>", "<C-w><C-k>", "Move focus to the upper window")
 
 --- Navigate left and right by n places in the bufferline
 ---@param n integer The number of tabs to navigate to (positive = right, negative = left)
-function nav(n)
+local function nav(n)
   local current = vim.api.nvim_get_current_buf()
   for i, v in ipairs(vim.t.bufs) do
     if current == v then
@@ -24,8 +24,8 @@ function nav(n)
     end
   end
 end
-nmap("<C-f>", function() nav(vim.v.count > 0 and vim.v.count or 1) end, "Next buffer")
-nmap("<C-b>", function() nav(-(vim.v.count > 0 and vim.v.count or 1)) end, "Previous buffer")
+nmap("<C-f>", function() nav(vim.v.count1) end, "Next buffer")
+nmap("<C-b>", function() nav(-vim.v.count1) end, "Previous buffer")
 
 --- @param suffix string
 --- @param rhs string | function
