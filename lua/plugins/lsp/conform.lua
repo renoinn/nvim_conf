@@ -18,7 +18,7 @@ return {
         return nil
       else
         return {
-          timeout_ms = 500,
+          timeout_ms = 5000,
           lsp_format = "fallback",
         }
       end
@@ -26,6 +26,11 @@ return {
     formatters_by_ft = {
       lua = { "stylua" },
       ruby = { "rubocop" },
+    },
+    formatters = {
+      rubocop = {
+        args = { "-a", "-f", "quiet", "--stderr", "--stdin", "$FILENAME" },
+      },
     },
   },
 }
